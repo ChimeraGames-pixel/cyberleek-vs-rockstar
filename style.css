@@ -297,14 +297,16 @@ h1 {
 
 /* Mobile Responsive & Orientation Locked styling */
 @media (max-width: 1024px) {
-    /* Full screen on mobile landscape */
+    /* Safe frame layout on mobile landscape with margins */
     @media (orientation: landscape) {
         #gameContainer {
-            width: 100vw;
-            height: 100vh;
-            border-radius: 0;
-            border: none;
-            box-shadow: none;
+            width: calc(100vw - 16px);
+            height: calc(100vh - 16px); /* Fallback */
+            height: calc(100dvh - 16px); /* Use dynamic viewport height to exclude browser status bars */
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
         }
     }
 }
