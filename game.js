@@ -879,7 +879,7 @@ async function loadStats() {
         const listDiv = document.getElementById("leaderboardList");
         if (listDiv) {
             if (globalStats.highscores.length === 0) {
-                listDiv.innerHTML = "<p style='color: #aaa;'>Keine Einträge vorhanden</p>";
+                listDiv.innerHTML = "<p style='color: #aaa;'>No entries yet</p>";
             } else {
                 listDiv.innerHTML = globalStats.highscores.map((hs, idx) => 
                     `<div style="display:flex; justify-content:space-between; margin: 4px 0; border-bottom: 1px dashed rgba(255,255,255,0.05); padding: 2px 4px;">
@@ -1011,6 +1011,14 @@ function update() {
         
         // HUD Catcher Warning updating
         const distanceToCatcher = Math.max(0, Math.floor((player.x - (catcher.x + catcher.width)) / 10));
+        
+        if (distanceToCatcher <= 0) {
+            document.getElementById("catcherDist").innerText = "0";
+            warningDiv.className = "danger";
+            triggerGameOver();
+            return;
+        }
+        
         document.getElementById("catcherDist").innerText = distanceToCatcher;
         if (distanceToCatcher > 12) {
             warningDiv.className = "safe";
@@ -1200,34 +1208,12 @@ function draw() {
     particles.forEach(p => p.draw());
 }
 
-let lastTime = 0;
-const fpsInterval = 1000 / 60; // Lock physics updates to exactly 60 FPS (16.66ms per tick)
-
-// Main Loop (runs continuously, updating/drawing only when playing, preventing duplicates and high-refresh-rate speedups)
-function gameLoop(timestamp) {
-    if (!lastTime) lastTime = timestamp;
-    
-    let elapsed = timestamp - lastTime;
-    
-    // Prevent huge jumps when switching tabs or loading the page
-    if (elapsed > 1000) {
-        elapsed = fpsInterval;
-        lastTime = timestamp - fpsInterval;
-    }
-    
-    // Run update ticks at a fixed rate of 60 FPS
-    while (timestamp - lastTime >= fpsInterval) {
-        if (gameState === "PLAYING") {
-            update();
-        }
-        lastTime += fpsInterval;
-    }
-    
-    // Render the graphics at the display's natural refresh rate for smoothness
+// Main Loop (runs continuously, updating/drawing only when playing, preventing duplicates)
+function gameLoop() {
     if (gameState === "PLAYING") {
+        update();
         draw();
     }
-    
     requestAnimationFrame(gameLoop);
 }
 
