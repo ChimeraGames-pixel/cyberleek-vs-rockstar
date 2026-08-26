@@ -1200,12 +1200,34 @@ function draw() {
     particles.forEach(p => p.draw());
 }
 
-// Main Loop (runs continuously, updating/drawing only when playing, preventing duplicates)
-function gameLoop() {
+let lastTime = 0;
+const fpsInterval = 1000 / 60; // Lock physics updates to exactly 60 FPS (16.66ms per tick)
+
+// Main Loop (runs continuously, updating/drawing only when playing, preventing duplicates and high-refresh-rate speedups)
+function gameLoop(timestamp) {
+    if (!lastTime) lastTime = timestamp;
+    
+    let elapsed = timestamp - lastTime;
+    
+    // Prevent huge jumps when switching tabs or loading the page
+    if (elapsed > 1000) {
+        elapsed = fpsInterval;
+        lastTime = timestamp - fpsInterval;
+    }
+    
+    // Run update ticks at a fixed rate of 60 FPS
+    while (timestamp - lastTime >= fpsInterval) {
+        if (gameState === "PLAYING") {
+            update();
+        }
+        lastTime += fpsInterval;
+    }
+    
+    // Render the graphics at the display's natural refresh rate for smoothness
     if (gameState === "PLAYING") {
-        update();
         draw();
     }
+    
     requestAnimationFrame(gameLoop);
 }
 
