@@ -308,6 +308,77 @@ h1 {
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
             overflow: hidden !important;
         }
+
+        /* Shrunken overlays to fit cut-off screens */
+        .overlayContent {
+            padding: 12px 20px !important;
+            gap: 8px !important;
+            border-radius: 12px !important;
+            max-width: 420px !important;
+            width: 95% !important;
+        }
+
+        h1, .glitch, .danger {
+            font-size: 1.3rem !important;
+            margin-bottom: 2px !important;
+        }
+
+        .subtitle {
+            font-size: 0.75rem !important;
+            margin-bottom: 2px !important;
+        }
+
+        .instructions {
+            padding: 6px 12px !important;
+            font-size: 0.7rem !important;
+            margin-bottom: 4px !important;
+        }
+
+        .instructions p {
+            margin: 2px 0 !important;
+        }
+
+        .actionBtn, #restartBtn, #submitHighscoreBtn {
+            font-size: 0.75rem !important;
+            padding: 6px 12px !important;
+        }
+
+        #wantedImage {
+            max-height: 180px !important;
+            max-width: 90% !important;
+        }
+
+        #gameOverVideo {
+            max-height: 180px !important;
+            max-width: 90% !important;
+            margin: 0 auto !important;
+        }
+
+        #introVideo {
+            max-height: 100% !important;
+        }
+
+        #highscoreForm {
+            margin: 5px auto !important;
+            max-width: 260px !important;
+        }
+
+        #playerNameInput {
+            padding: 6px !important;
+            font-size: 0.75rem !important;
+            margin-bottom: 4px !important;
+        }
+
+        #leaderboard {
+            margin: 4px auto !important;
+            padding: 6px !important;
+            max-width: 260px !important;
+        }
+
+        #leaderboardList {
+            font-size: 0.7rem !important;
+            line-height: 1.2 !important;
+        }
     }
 }
 
