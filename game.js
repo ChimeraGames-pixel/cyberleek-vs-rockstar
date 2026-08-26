@@ -17,6 +17,9 @@ function resizeCanvas() {
 }
 window.addEventListener("resize", resizeCanvas);
 window.addEventListener("load", resizeCanvas);
+window.addEventListener("orientationchange", () => {
+    setTimeout(resizeCanvas, 200);
+});
 
 // Image Loader Helper
 const images = {};
