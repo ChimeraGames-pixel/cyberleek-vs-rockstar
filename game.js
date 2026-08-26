@@ -26,11 +26,33 @@ canvas.width = V_WIDTH;
 canvas.height = V_HEIGHT;
 
 // Scaling to fit container
+// Scaling to fit container (preserving 16:9 aspect ratio and centering)
 function resizeCanvas() {
     const container = document.getElementById("gameContainer");
     const rect = container.getBoundingClientRect();
-    canvas.style.width = rect.width + "px";
-    canvas.style.height = rect.height + "px";
+    
+    const targetRatio = V_WIDTH / V_HEIGHT; // 960 / 540 = 1.777...
+    const containerRatio = rect.width / rect.height;
+    
+    let drawW, drawH;
+    
+    if (containerRatio > targetRatio) {
+        // Container is wider than 16:9 (pillarbox - black bars left/right)
+        drawH = rect.height;
+        drawW = drawH * targetRatio;
+    } else {
+        // Container is taller than 16:9 (letterbox - black bars top/bottom)
+        drawW = rect.width;
+        drawH = drawW / targetRatio;
+    }
+    
+    canvas.style.width = drawW + "px";
+    canvas.style.height = drawH + "px";
+    
+    // Center the canvas inside the container
+    canvas.style.position = "absolute";
+    canvas.style.left = (rect.width - drawW) / 2 + "px";
+    canvas.style.top = (rect.height - drawH) / 2 + "px";
 }
 window.addEventListener("resize", resizeCanvas);
 window.addEventListener("load", resizeCanvas);
