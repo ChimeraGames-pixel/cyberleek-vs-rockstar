@@ -1,3 +1,20 @@
+// Prevent pinch-to-zoom gestures (iOS Safari / Chrome workaround)
+document.addEventListener("touchmove", (e) => {
+    if (e.scale && e.scale !== 1) {
+        e.preventDefault();
+    }
+}, { passive: false });
+
+// Prevent double-tap to zoom
+let lastTouchEnd = 0;
+document.addEventListener("touchend", (e) => {
+    const now = (new Date()).getTime();
+    if (now - lastTouchEnd <= 300) {
+        e.preventDefault();
+    }
+    lastTouchEnd = now;
+}, { passive: false });
+
 // Canvas Setup
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
