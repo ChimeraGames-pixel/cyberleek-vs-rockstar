@@ -926,8 +926,6 @@ function resetGame() {
         if (globalPlaysEl) globalPlaysEl.innerText = data.totalPlays;
     })
     .catch(e => console.error(e));
-
-    musicPlayer.start(); // Start background loop music
 }
 
 // Collision Check
@@ -1202,13 +1200,13 @@ function draw() {
     particles.forEach(p => p.draw());
 }
 
-// Main Loop
+// Main Loop (runs continuously, updating/drawing only when playing, preventing duplicates)
 function gameLoop() {
     if (gameState === "PLAYING") {
         update();
         draw();
-        requestAnimationFrame(gameLoop);
     }
+    requestAnimationFrame(gameLoop);
 }
 
 // Event Bindings
@@ -1216,14 +1214,14 @@ document.getElementById("startBtn").addEventListener("click", () => {
     document.getElementById("startScreen").classList.add("hidden");
     gameState = "PLAYING";
     resetGame();
-    gameLoop();
+    musicPlayer.start(); // Start music exactly when gameplay begins!
 });
 
 document.getElementById("restartBtn").addEventListener("click", () => {
     document.getElementById("gameOverMenuScreen").classList.add("hidden");
     gameState = "PLAYING";
     resetGame();
-    gameLoop();
+    musicPlayer.start(); // Start music exactly when gameplay begins!
 });
 
 // Touch / Mouse controls
@@ -1367,3 +1365,6 @@ window.addEventListener("DOMContentLoaded", () => {
         transitionToWanted();
     }
 });
+
+// Start the central game loop chain exactly once
+requestAnimationFrame(gameLoop);
