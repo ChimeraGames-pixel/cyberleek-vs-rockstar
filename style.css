@@ -1,0 +1,336 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none; /* Block double-tap to zoom & pinch-to-zoom! */
+}
+
+body {
+    background-color: #030712;
+    color: #f3f4f6;
+    font-family: 'Outfit', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+    touch-action: none;
+}
+
+#gameContainer {
+    position: relative;
+    width: 960px;
+    height: 540px;
+    background-color: #020617;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7),
+                0 0 40px rgba(6, 182, 212, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* HUD Styling */
+#hud {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    pointer-events: none;
+    z-index: 10;
+}
+
+#distanceMeter {
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(6, 182, 212, 0.2);
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1.2rem;
+    letter-spacing: 0.05em;
+    color: #22d3ee;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    text-shadow: 0 0 8px rgba(34, 211, 238, 0.5);
+}
+
+#catcherWarning {
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(12px);
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    transition: all 0.3s ease;
+}
+
+#catcherWarning.safe {
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    color: #4ade80;
+}
+
+#catcherWarning.warning {
+    border: 1px solid rgba(234, 179, 8, 0.3);
+    color: #facc15;
+    animation: pulse 1s infinite alternate;
+}
+
+#catcherWarning.danger {
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    color: #f87171;
+    animation: flashDanger 0.5s infinite alternate;
+}
+
+/* Controls Styling */
+#controls {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    z-index: 10;
+}
+
+.controlBtn {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: 1rem;
+    cursor: pointer;
+    outline: none;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#jumpBtn {
+    background: radial-gradient(circle, rgba(6, 182, 212, 0.4) 0%, rgba(8, 145, 178, 0.1) 100%);
+    color: #22d3ee;
+    border-color: rgba(34, 211, 238, 0.3);
+}
+
+#jumpBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(34, 211, 238, 0.4);
+    background: radial-gradient(circle, rgba(6, 182, 212, 0.5) 0%, rgba(8, 145, 178, 0.2) 100%);
+}
+
+#jumpBtn:active {
+    transform: scale(0.95);
+    background: rgba(34, 211, 238, 0.6);
+    color: #020617;
+}
+
+#flipBtn {
+    background: radial-gradient(circle, rgba(236, 72, 153, 0.4) 0%, rgba(190, 24, 93, 0.1) 100%);
+    color: #f472b6;
+    border-color: rgba(244, 114, 182, 0.3);
+}
+
+#flipBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(244, 114, 182, 0.4);
+    background: radial-gradient(circle, rgba(236, 72, 153, 0.5) 0%, rgba(190, 24, 93, 0.2) 100%);
+}
+
+#flipBtn:active {
+    transform: scale(0.95);
+    background: rgba(244, 114, 182, 0.6);
+    color: #020617;
+}
+
+/* Overlays */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(3, 7, 18, 0.85);
+    backdrop-filter: blur(16px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+    transition: opacity 0.4s ease;
+}
+
+.overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.overlayContent {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 40px;
+    border-radius: 24px;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+h1 {
+    font-size: 2.2rem;
+    font-weight: 900;
+    letter-spacing: 0.05em;
+}
+
+.glitch {
+    color: #fff;
+    text-shadow: 2px 0 0 #06b6d4, -2px 0 0 #ec4899;
+}
+
+.subtitle {
+    color: #9ca3af;
+    font-size: 1.1rem;
+}
+
+.instructions {
+    background: rgba(2, 6, 17, 0.4);
+    border-radius: 12px;
+    padding: 16px;
+    width: 100%;
+    text-align: left;
+    font-size: 0.9rem;
+    color: #d1d5db;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.actionBtn {
+    background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+    border: none;
+    outline: none;
+    color: #ffffff;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 14px 32px;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(6, 182, 212, 0.4);
+    transition: all 0.2s ease;
+    width: 100%;
+    letter-spacing: 0.05em;
+}
+
+.actionBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(6, 182, 212, 0.6);
+    background: linear-gradient(135deg, #22d3ee 0%, #06b6d4 100%);
+}
+
+.actionBtn:active {
+    transform: translateY(0);
+}
+
+/* Game Over details */
+.danger {
+    color: #ef4444;
+    text-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+}
+
+.gtaUploadContainer {
+    width: 100%;
+    background: rgba(2, 6, 17, 0.5);
+    border-radius: 16px;
+    padding: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.gtaTitle {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #a855f7;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+#gtaImage {
+    max-width: 100%;
+    max-height: 180px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* Keyframe animations */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.03); }
+}
+
+@keyframes flashDanger {
+    0% { background: rgba(239, 68, 68, 0.1); }
+    100% { background: rgba(239, 68, 68, 0.3); }
+}
+
+/* Mobile Responsive & Orientation Locked styling */
+@media (max-width: 1024px) {
+    /* Safe frame layout on mobile landscape with margins */
+    @media (orientation: landscape) {
+        #gameContainer {
+            width: calc(100vw - 16px);
+            height: calc(100vh - 16px); /* Fallback */
+            height: calc(100dvh - 16px); /* Use dynamic viewport height to exclude browser status bars */
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+    }
+}
+
+/* Rotation Warning Overlay (for portrait orientation on mobile) */
+#orientationWarning {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #030712;
+    z-index: 9999;
+    color: #fff;
+    text-align: center;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+@media (max-width: 1024px) and (orientation: portrait) {
+    #orientationWarning {
+        display: flex;
+    }
+}

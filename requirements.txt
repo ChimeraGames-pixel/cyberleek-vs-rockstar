@@ -1,0 +1,2 @@
+# Requirements file for Render python hosting
+# We only use Python built-in modules (http.server, json, os), so no external libraries are required.
