@@ -300,7 +300,13 @@ h1 {
     /* Safe frame layout on mobile landscape with margins */
     @media (orientation: landscape) {
         #gameContainer {
-            overflow: hidden;
+            width: calc(100vw - 12px) !important;
+            height: calc(100vh - 12px) !important;
+            height: calc(100dvh - 12px) !important;
+            border-radius: 12px !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+            overflow: hidden !important;
         }
     }
 }
