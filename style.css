@@ -359,25 +359,47 @@ h1 {
         }
 
         #highscoreForm {
-            margin: 5px auto !important;
-            max-width: 260px !important;
+            margin: 2px auto !important;
+            max-width: 240px !important;
         }
 
         #playerNameInput {
-            padding: 6px !important;
-            font-size: 0.75rem !important;
-            margin-bottom: 4px !important;
+            padding: 4px !important;
+            font-size: 0.7rem !important;
+            margin-bottom: 2px !important;
         }
 
         #leaderboard {
-            margin: 4px auto !important;
-            padding: 6px !important;
-            max-width: 260px !important;
+            margin: 2px auto !important;
+            padding: 4px !important;
+            max-width: 240px !important;
         }
 
         #leaderboardList {
+            font-size: 0.65rem !important;
+            line-height: 1.1 !important;
+        }
+
+        #gameOverMenuScreen .overlayContent {
+            padding: 8px 16px !important;
+            gap: 4px !important;
+            max-width: 380px !important;
+        }
+
+        #gameOverMenuScreen h1 {
+            font-size: 1.1rem !important;
+            margin-bottom: 0 !important;
+        }
+
+        #gameOverMenuScreen p {
+            font-size: 0.75rem !important;
+            margin: 2px 0 !important;
+        }
+
+        #gameOverMenuScreen .actionBtn, #restartBtn {
             font-size: 0.7rem !important;
-            line-height: 1.2 !important;
+            padding: 4px 10px !important;
+            margin-top: 4px !important;
         }
     }
 }
