@@ -22,8 +22,10 @@ def load_stats_from_cloud():
             data = response.read().decode('utf-8')
             if data and data != "null" and data != '""':
                 # Immanuel returns JSON serialized string wrapped in quotes
-                val_str = json.loads(data)
-                parsed = json.loads(val_str)
+                hex_str = json.loads(data)
+                # Decode from hex
+                stats_str = bytes.fromhex(hex_str).decode('utf-8')
+                parsed = json.loads(stats_str)
                 # Keep baseline of at least 80 plays
                 if parsed.get('totalPlays', 0) < 80:
                     parsed['totalPlays'] = 80
@@ -49,11 +51,11 @@ def save_stats_to_cloud(stats):
     except Exception as e:
         print("Error saving local stats:", e)
         
-    # Save to cloud database
+    # Save to cloud database using hex encoding (to bypass ASP.NET colon block)
     try:
         stats_str = json.dumps(stats)
-        encoded_val = urllib.parse.quote(stats_str)
-        url = f"https://keyvalue.immanuel.co/api/KeyVal/UpdateValue/{APP_KEY}/{DB_KEY}/{encoded_val}"
+        hex_str = stats_str.encode('utf-8').hex()
+        url = f"https://keyvalue.immanuel.co/api/KeyVal/UpdateValue/{APP_KEY}/{DB_KEY}/{hex_str}"
         req = urllib.request.Request(url, data=b"") # Empty data for POST
         with urllib.request.urlopen(req, timeout=4) as response:
             res = response.read().decode('utf-8')
