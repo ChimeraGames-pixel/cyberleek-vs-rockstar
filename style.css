@@ -296,18 +296,16 @@ h1 {
 }
 
 /* Mobile Responsive & Orientation Locked styling */
-@media (max-width: 1024px) {
-    /* Safe frame layout on mobile landscape with margins */
-    @media (orientation: landscape) {
-        #gameContainer {
-            width: calc(100vw - 12px) !important;
-            height: calc(100vh - 12px) !important;
-            height: calc(100dvh - 12px) !important;
-            border-radius: 12px !important;
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
-            overflow: hidden !important;
-        }
+@media (max-width: 1024px) and (orientation: landscape) {
+    #gameContainer {
+        width: calc(100vw - 12px) !important;
+        height: calc(100vh - 12px) !important;
+        height: calc(100dvh - 12px) !important;
+        border-radius: 12px !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+        overflow: hidden !important;
+    }
 
         /* Shrunken overlays to fit cut-off screens */
         .overlayContent {
@@ -402,7 +400,6 @@ h1 {
             margin-top: 4px !important;
         }
     }
-}
 
 /* Rotation Warning Overlay (for portrait orientation on mobile) */
 #orientationWarning {

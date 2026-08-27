@@ -1208,13 +1208,25 @@ function draw() {
     particles.forEach(p => p.draw());
 }
 
-// Main Loop (runs continuously, updating/drawing only when playing, preventing duplicates)
-function gameLoop() {
-    if (gameState === "PLAYING") {
-        update();
-        draw();
-    }
+let lastTime = 0;
+const fpsInterval = 1000 / 60; // Throttles physics and draws to 60 FPS
+
+// Main Loop (runs continuously, locked at 60 FPS to prevent speedups on 90Hz/120Hz/240Hz screens)
+function gameLoop(currentTime) {
     requestAnimationFrame(gameLoop);
+    
+    if (!lastTime) lastTime = currentTime;
+    const elapsed = currentTime - lastTime;
+    
+    if (elapsed >= fpsInterval) {
+        // Adjust lastTime to prevent drift
+        lastTime = currentTime - (elapsed % fpsInterval);
+        
+        if (gameState === "PLAYING") {
+            update();
+            draw();
+        }
+    }
 }
 
 // Event Bindings
