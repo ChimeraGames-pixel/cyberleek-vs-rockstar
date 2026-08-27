@@ -1268,37 +1268,16 @@ window.addEventListener("keydown", (e) => {
 });
 
 // Show initial background details even in start menu
-preload().then(() => {
-    resetGame();
-    draw();
-    loadStats(); // Load initial highscores and global plays counter
-});
-
-// Highscore Form Submission listener
-document.getElementById("submitHighscoreBtn").addEventListener("click", () => {
-    const nameInput = document.getElementById("playerNameInput");
-    const name = nameInput.value.trim();
-    if (!name) return;
-    
-    const currentScore = Math.floor(score);
-    
-    fetch("/api/stats", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name, score: currentScore })
-    })
-    .then(res => res.json())
-    .then(data => {
-        globalStats = data;
-        document.getElementById("highscoreForm").classList.add("hidden");
-        nameInput.value = "";
-        loadStats();
-    })
-    .catch(e => console.error(e));
-});
+function initGameData() {
+    preload().then(() => {
+        resetGame();
+        draw();
+        loadStats(); // Load initial highscores and global plays counter
+    });
+}
 
 // Run Intro Sequence (Splash Screen -> Piss Video Screen -> Wanted Poster Screen -> Start Screen)
-window.addEventListener("DOMContentLoaded", () => {
+function initIntroSequence() {
     const splashScreen = document.getElementById("splashScreen");
     const introVideoScreen = document.getElementById("introVideoScreen");
     const introWantedScreen = document.getElementById("introWantedScreen");
@@ -1372,7 +1351,45 @@ window.addEventListener("DOMContentLoaded", () => {
     } else {
         transitionToWanted();
     }
-});
+}
 
-// Start the central game loop chain exactly once
-requestAnimationFrame(gameLoop);
+// Wrap initialization flow to guarantee it executes regardless of loading speeds and race conditions
+function bootLoader() {
+    initGameData();
+    initIntroSequence();
+    
+    // Highscore Form Submission listener
+    const submitBtn = document.getElementById("submitHighscoreBtn");
+    if (submitBtn) {
+        submitBtn.addEventListener("click", () => {
+            const nameInput = document.getElementById("playerNameInput");
+            const name = nameInput.value.trim();
+            if (!name) return;
+            
+            const currentScore = Math.floor(score);
+            
+            fetch("/api/stats", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name: name, score: currentScore })
+            })
+            .then(res => res.json())
+            .then(data => {
+                globalStats = data;
+                document.getElementById("highscoreForm").classList.add("hidden");
+                nameInput.value = "";
+                loadStats();
+            })
+            .catch(e => console.error(e));
+        });
+    }
+
+    // Start the central game loop chain exactly once
+    requestAnimationFrame(gameLoop);
+}
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", bootLoader);
+} else {
+    bootLoader();
+}
