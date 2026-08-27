@@ -29,6 +29,8 @@ def load_stats_from_cloud():
                 # Keep baseline of at least 80 plays
                 if parsed.get('totalPlays', 0) < 80:
                     parsed['totalPlays'] = 80
+                if 'highscores' not in parsed:
+                    parsed['highscores'] = []
                 return parsed
     except Exception as e:
         print("Error loading cloud stats:", e)
@@ -39,6 +41,8 @@ def load_stats_from_cloud():
             parsed = json.load(f)
             if parsed.get('totalPlays', 0) < 80:
                 parsed['totalPlays'] = 80
+            if 'highscores' not in parsed:
+                parsed['highscores'] = []
             return parsed
     except Exception:
         return {'totalPlays': 80, 'highscores': []}

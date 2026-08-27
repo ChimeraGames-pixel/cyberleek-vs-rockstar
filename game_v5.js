@@ -516,6 +516,7 @@ class Catcher {
         this.logos = ["logo_microsoft", "logo_rockstar", "logo_fbi"];
         this.activeTime = 0;
         this.speed = 1.2;
+        this.slowdownTimer = 0;
     }
 
     update() {
@@ -528,8 +529,14 @@ class Catcher {
         const dangerMultiplier = Math.min(score / 800, 0.6);
         targetX += dangerMultiplier * 140;
 
+        let currentSpeed = this.speed;
+        if (this.slowdownTimer > 0) {
+            this.slowdownTimer--;
+            currentSpeed = this.speed * 0.35; // Slow down catcher chase speed by 65% after hourglass pushback
+        }
+
         if (this.x < targetX) {
-            this.x += this.speed;
+            this.x += currentSpeed;
         } else if (this.x > targetX + 10) {
             this.x -= 0.5; // slow back off
         }
@@ -565,6 +572,7 @@ class Catcher {
     pushBack(amount) {
         this.x -= amount;
         if (this.x < 10) this.x = 10;
+        this.slowdownTimer = 180; // Stun/slow down catcher for 3 seconds (180 frames at 60 FPS)
         
         // Spawn green blast effect particles
         for (let i = 0; i < 15; i++) {
@@ -878,10 +886,11 @@ async function loadStats() {
         
         const listDiv = document.getElementById("leaderboardList");
         if (listDiv) {
-            if (globalStats.highscores.length === 0) {
+            const highscores = globalStats.highscores || [];
+            if (highscores.length === 0) {
                 listDiv.innerHTML = "<p style='color: #aaa;'>No entries yet</p>";
             } else {
-                listDiv.innerHTML = globalStats.highscores.map((hs, idx) => 
+                listDiv.innerHTML = highscores.map((hs, idx) => 
                     `<div style="display:flex; justify-content:space-between; margin: 4px 0; border-bottom: 1px dashed rgba(255,255,255,0.05); padding: 2px 4px;">
                         <span>${idx+1}. ${hs.name}</span>
                         <span style="color:#eab308; font-weight:bold;">${hs.score}m</span>
