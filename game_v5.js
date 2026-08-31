@@ -1371,6 +1371,14 @@ function initIntroSequence() {
             // Unblock audio context immediately on interaction
             musicPlayer.init();
             
+            // Try to enter Fullscreen mode to hide address bar
+            const docEl = document.documentElement;
+            if (docEl.requestFullscreen) {
+                docEl.requestFullscreen().catch(err => console.log("Fullscreen blocked:", err));
+            } else if (docEl.webkitRequestFullscreen) { /* Safari / iOS */
+                docEl.webkitRequestFullscreen();
+            }
+            
             // Hide Splash Screen
             splashScreen.classList.add("hidden");
             
