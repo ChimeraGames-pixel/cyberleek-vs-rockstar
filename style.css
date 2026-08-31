@@ -9,8 +9,8 @@
     touch-action: none; /* Block double-tap to zoom & pinch-to-zoom! */
 }
 
-body {
-    background-color: #030712;
+html, body {
+    background-color: #000;
     color: #f3f4f6;
     font-family: 'Outfit', sans-serif;
     display: flex;
@@ -298,12 +298,12 @@ h1 {
 /* Mobile Responsive & Orientation Locked styling */
 @media (max-width: 1024px) and (orientation: landscape) {
     #gameContainer {
-        width: calc(100vw - 12px) !important;
-        height: calc(100vh - 12px) !important;
-        height: calc(100dvh - 12px) !important;
-        border-radius: 12px !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        height: 100dvh !important;
+        border-radius: 0px !important;
+        border: none !important;
+        box-shadow: none !important;
         overflow: hidden !important;
     }
 
