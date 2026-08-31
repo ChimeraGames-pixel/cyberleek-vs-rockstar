@@ -1,5 +1,16 @@
-// Escape In-App Webviews (Instagram, TikTok, FBAN, Messenger)
-(function escapeWebview() {
+// Escape Iframes (like Lnk.bio framing) and In-App Webviews
+(function escapeFramesAndWebviews() {
+    // 1. Frame Busting (If loaded inside an iframe, force break out to top window)
+    if (window.self !== window.top) {
+        try {
+            window.top.location.href = window.location.href;
+            return;
+        } catch (e) {
+            console.error("Frame bust failed:", e);
+        }
+    }
+
+    // 2. In-App Browser Escape (Instagram, TikTok, FBAN, Messenger, etc.)
     const ua = navigator.userAgent || navigator.vendor || window.opera;
     const isAndroid = /Android/i.test(ua);
     const isIOS = /iPhone|iPad|iPod/i.test(ua);
