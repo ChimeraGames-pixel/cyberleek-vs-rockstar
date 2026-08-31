@@ -1,3 +1,27 @@
+// Escape In-App Webviews (Instagram, TikTok, FBAN, Messenger)
+(function escapeWebview() {
+    const ua = navigator.userAgent || navigator.vendor || window.opera;
+    const isAndroid = /Android/i.test(ua);
+    const isIOS = /iPhone|iPad|iPod/i.test(ua);
+    const isInApp = /Instagram|FBAN|FBAV|TikTok|Line|Twitter|Pinterest|LinkedIn|Messenger/i.test(ua);
+
+    if (isInApp) {
+        if (isAndroid) {
+            // Redirect to native Chrome/System Browser on Android
+            const cleanUrl = window.location.href.replace(/^https?:\/\//, '');
+            window.location.href = `intent://${cleanUrl}#Intent;scheme=https;end`;
+        } else if (isIOS) {
+            // Show instructions to open in Safari on iOS
+            window.addEventListener("DOMContentLoaded", () => {
+                const overlay = document.getElementById("webviewEscapeOverlay");
+                if (overlay) {
+                    overlay.classList.remove("hidden");
+                }
+            });
+        }
+    }
+})();
+
 // Prevent pinch-to-zoom gestures (iOS Safari / Chrome workaround)
 document.addEventListener("touchmove", (e) => {
     if (e.scale && e.scale !== 1) {

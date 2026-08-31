@@ -14,6 +14,15 @@
     </style>
 </head>
 <body>
+    <!-- In-App Webview Escape Overlay for iOS -->
+    <div id="webviewEscapeOverlay" class="overlay hidden" style="z-index: 102; background: rgba(3, 7, 18, 0.97); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center;">
+        <div style="font-size: 4rem; margin-bottom: 20px; animation: pulse 1.5s infinite;">🧭</div>
+        <h2 style="color: #ec4899; margin-bottom: 15px; font-family: 'Outfit', sans-serif;">Open in Safari</h2>
+        <p style="color: #22d3ee; font-size: 1.1rem; max-width: 320px; line-height: 1.5; font-family: 'Outfit', sans-serif; margin-bottom: 25px;">
+            To play in fullscreen without cut-offs, please tap the browser icon or the three dots <strong>(...)</strong> and select <strong>"Open in Safari"</strong>.
+        </p>
+    </div>
+
     <!-- Orientation warning for portrait smartphones -->
     <div id="orientationWarning">
         <div style="font-size: 3rem; margin-bottom: 20px; animation: pulse 1.5s infinite;">🔄</div>
@@ -99,6 +108,6 @@
         </div>
     </div>
     
-    <script src="game_v5.js?v=5.2"></script>
+    <script src="game_v5.js?v=5.4"></script>
 </body>
 </html>
